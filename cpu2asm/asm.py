@@ -124,6 +124,8 @@ class Assembler(object):
                 src = op1[1:]
             elif cmd == CPU2_ISA_OP_POP:
                 dst = op1[1:]
+            elif cmd == CPU2_ISA_OP_JPZ:
+                val = op1
             else:
                 dst = op1[1:]
                 src = op2[1:]
@@ -139,9 +141,17 @@ if __name__ == "__main__":
     instructions = []
     asm = Assembler(CPU2_ISA_OPCODES)
 
+    line_num = 0
+
     with open(in_path, "r") as f:
         for line in f:
-            instructions.append(asm.parse(line))
+            line_num += 1
+
+            try:
+                instructions.append(asm.parse(line))
+            except:
+                print("Error on line " + str(line_num))
+                print(" "*4 + str(line))
 
     with open(out_path, "wb") as f:
         for i in instructions:
